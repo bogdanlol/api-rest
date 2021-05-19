@@ -29,7 +29,7 @@ type Connector struct {
 var connectors []Connector
 
 func homePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome to the HomePage!")
+	fmt.Fprintf(w, "Api Gateway For Cp4D F055 Streaming!")
 	fmt.Println("Endpoint Hit: homePage")
 }
 
