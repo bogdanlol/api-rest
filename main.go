@@ -2,6 +2,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -61,9 +62,14 @@ func createNewConnector(w http.ResponseWriter, r *http.Request) {
 	// // update our global Articles array to include
 	// // our new Article
 	spew.Dump(connector)
-	connectors = append(connectors, connector)
-
+	jsonValue, _ := json.Marshal(connector)
+	resp, err := http.Post("localhost:8081/connectors", "application/json", bytes.NewBuffer(jsonValue))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(resp.Status)
 	json.NewEncoder(w).Encode(connectors)
+
 }
 
 func deleteConnector(w http.ResponseWriter, r *http.Request) {
