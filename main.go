@@ -56,7 +56,7 @@ func returnSingleConenctor(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func createNewConnector(w http.ResponseWriter, r *http.Request) {
+func createNewConnector(w http.ResponseWriter, r *http.Request) string {
 	// get the body of our POST request
 	// unmarshal this into a new Article struct
 	// append this to our Articles array.
@@ -97,9 +97,16 @@ func createNewConnector(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	//Convert the body to type string
+	sb := string(body)
 
 	fmt.Println(resp.Status)
 	json.NewEncoder(w).Encode(connectors)
+	return sb
 
 }
 
