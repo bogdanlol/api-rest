@@ -40,8 +40,17 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 }
 
 func returnAllConnectors(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Endpoint Hit: returnAllArticles")
-	spew.Dump(connectors)
+
+	resp, err := http.Get("http://kafka-connect-simulator-5-streamingtest.apps.cp4d-poc.cp4d.ichp.nietsnel.nu/connectors")
+	if err != nil {
+		panic(err)
+	}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	spew.Dump(body)
+
 	json.NewEncoder(w).Encode(connectors)
 }
 
@@ -66,8 +75,6 @@ func createNewConnector(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(reqBody, &connector)
 	// // update our global Articles array to include
 	// // our new Article
-	spew.Dump(connector)
-
 	// sanitize connector
 	if connector.Config.Class == "" {
 		panic("ERROR: Connector class not specified!")
@@ -91,7 +98,6 @@ func createNewConnector(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jsonValue, _ := json.Marshal(connector)
-	spew.Dump(jsonValue)
 	resp, err := http.Post("http://kafka-connect-simulator-5-streamingtest.apps.cp4d-poc.cp4d.ichp.nietsnel.nu/connectors", "application/json", bytes.NewBuffer(jsonValue))
 
 	if err != nil {
@@ -101,8 +107,11 @@ func createNewConnector(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	var responseConnector Connector
 	//Convert the body to type string
-	spew.Dump(body)
+	json.Unmarshal(body, &responseConnector)
+
+	spew.Dump(responseConnector)
 	fmt.Println(resp.Status)
 	json.NewEncoder(w).Encode(connectors)
 
