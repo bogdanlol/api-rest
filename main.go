@@ -92,7 +92,7 @@ func createNewConnector(w http.ResponseWriter, r *http.Request) {
 
 	jsonValue, _ := json.Marshal(connector)
 	spew.Dump(jsonValue)
-	resp, err := http.Post("http://localhost:8081/connectors", "application/json", bytes.NewBuffer(jsonValue))
+	resp, err := http.Post("http://kafka-connect-simulator-5-streamingtest.apps.cp4d-poc.cp4d.ichp.nietsnel.nu/connectors", "application/json", bytes.NewBuffer(jsonValue))
 
 	if err != nil {
 		panic(err)
